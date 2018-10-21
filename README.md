@@ -635,120 +635,67 @@ Real world example
 > Every organization is composed of employees. Each of the employees has same features i.e. has a salary, has some responsibilities, may or may not report to someone, may or may not have some subordinates etc.
 
 In plain words
-> Composite pattern lets clients to treat the individual objects in a uniform manner.
+-> Composite Pattern intent is to compose complex objects using other simpler objects into tree structures allowing the client(s) to treat these structures as if they were individual objects (Master JavaScript Patterns-3rd Edition-).
 
 Wikipedia says
 > In software engineering, the composite pattern is a partitioning design pattern. The composite pattern describes that a group of objects is to be treated in the same way as a single instance of an object. The intent of a composite is to "compose" objects into tree structures to represent part-whole hierarchies. Implementing the composite pattern lets clients treat individual objects and compositions uniformly.
 
 **Programmatic Example**
 
-Taking our employees example from above. Here we have different employee types
+For simplicity, lets consider a sequence of chars. Each Sequence Class contains a char and other Sequence Instance (Next).
+Each sequence is seen as individual object but it composed of other sequences. 
 
 ```js
-/*
-Employee interface :
 
-constructor(name, salary)
-getName()
-setSalary()
-getSalary()
-getRoles()
-*/
+ class Sequence
+ {
+     constructor(letter){
+         this.char=letter
+     }
 
-class Developer {
+     insertAfterMe(letter){
+        let l= new Sequence(letter)
+         if (!this.next) {
+                 this.next = l
+            } else {
+                this.next.previous=l
+                this.next=l
+            }
+        return l
+     }
 
-    constructor(name, salary) {
-        this.name = name
-        this.salary = salary
+     getSequence(){
+        let getRestOfSequence=(str)=>{
+
+            if(str.next) {
+                return str.char+getRestOfSequence(str.next)
+            } else {
+                return str.char
+            }
+        }
+
+        let phrase = this.char
+        if (this.next) {  
+        phrase+=getRestOfSequence(this.next)  
+        }
+
+        return phrase
+    
     }
 
-    getName() {
-        return this.name
-    }
 
-    setSalary(salary) {
-        this.salary = salary
-    }
 
-    getSalary() {
-        return this.salary
-    }
+ }
 
-    getRoles() {
-        return this.roles
-    }
 
-    develop() {
-        /* */
-    }
-}
-
-class Designer {
-
-    constructor(name, salary) {
-        this.name = name
-        this.salary = salary
-    }
-
-    getName() {
-        return this.name
-    }
-
-    setSalary(salary) {
-        this.salary = salary
-    }
-
-    getSalary() {
-        return this.salary
-    }
-
-    getRoles() {
-        return this.roles
-    }
-
-    design() {
-        /* */
-    }
-}
-```
-
-Then we have an organization which consists of several different types of employees
-
-```js
-class Organization {
-    constructor(){
-        this.employees = []
-    }
-
-    addEmployee(employee) {
-        this.employees.push(employee)
-    }
-
-    getNetSalaries() {
-        let netSalary = 0
-
-        this.employees.forEach(employee => {
-            netSalary += employee.getSalary()
-        })
-
-        return netSalary
-    }
-}
 ```
 
 And then it can be used as
 
 ```js
-// Prepare the employees
-const john = new Developer('John Doe', 12000)
-const jane = new Designer('Jane', 10000)
+ let sequence = new Sequence('A').insertAfterMe('B').insertAfterMe('C').insertAfterMe('D')
 
-// Add them to organization
-const organization = new Organization()
-organization.addEmployee(john)
-organization.addEmployee(jane)
-
-console.log("Net salaries: " , organization.getNetSalaries()) // Net Salaries: 22000
+ console.log('Sequence=',l.getSequence())// ABCD
 ```
 
 ☕ Decorator
